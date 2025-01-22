@@ -1,17 +1,16 @@
-package com.fastcampus.prometheus.domain.notice;
+package com.fastcampus.prometheus.domain.notice.dto.request;
 
+import com.fastcampus.prometheus.domain.notice.entity.Notice;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter
-public class NoticeDto {
+@ToString
+public class NoticeRequestDto {
 
     @NotBlank(message = "제목을 입력하세요.")
     private String title;
@@ -22,18 +21,14 @@ public class NoticeDto {
     @NotNull
     private String writer;
 
-//    @Builder.Default
-//    private String noticeType;
-//
-//    @NotNull
-//    private boolean isDeleted;
+    private String noticeType; // Add noticeType
 
     public Notice toEntity() {
         return Notice.builder()
                 .title(this.title)
                 .content(this.content)
                 .writer(this.writer)
-//                .noticeType(this.noticeType)
+                .noticeType(this.noticeType)
                 .build();
     }
 }

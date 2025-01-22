@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>공지사항 상세</title>
+</head>
+<body>
+<div id="container">
+    <div>
+        <h1 th:text="${notice.title}">공지사항 제목</h1>
+        <p><strong>글분류: </strong><span th:text="${notice.noticeType}">Category</span></p>
+        <p><strong>작성일: </strong><span th:text="${notice.regDate}">Created Date</span></p>
+        <p><strong>작성자: </strong><span th:text="${notice.writer}">Writer</span></p>
+        <p><strong>내용: </strong><span th:text="${notice.content}">Content</span></p>
+
+        <a href="/notice/list">목록으로 돌아가기</a> <!-- 공지사항 목록 페이지로 돌아가기 링크 -->
+    </div>
+</div>
+</body>
+</html>
