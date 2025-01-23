@@ -2,26 +2,29 @@ package com.fastcampus.prometheus.domain.notice.dto.request;
 
 import com.fastcampus.prometheus.domain.notice.entity.Notice;
 import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
 import lombok.*;
 
 @Builder
 @AllArgsConstructor
-@NoArgsConstructor
 @Getter
-@ToString
 public class NoticeRequestDto {
-
     @NotBlank(message = "제목을 입력하세요.")
     private String title;
 
-    @NotNull(message = "내용을 입력하세요.")  // content는 null을 허용하지 않도록 설정
+    @NotBlank(message = "내용을 입력하세요.")
     private String content;
 
-    @NotNull
+    /**
+     * TODO
+     * member 테이블 id와 조인
+     */
     private String writer;
 
-    private String noticeType; // Add noticeType
+    /**
+     * TODO
+     * 긴급, 일반 처리하기
+     */
+    private String noticeType; // Can be 'true' for emergency or 'false' for normal
 
     public Notice toEntity() {
         return Notice.builder()
@@ -31,4 +34,5 @@ public class NoticeRequestDto {
                 .noticeType(this.noticeType)
                 .build();
     }
+
 }

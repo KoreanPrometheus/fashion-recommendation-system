@@ -3,7 +3,7 @@ package com.fastcampus.prometheus.domain.notice.dto.response;
 import com.fastcampus.prometheus.domain.notice.entity.Notice;
 import lombok.*;
 
-import java.time.LocalDateTime;
+import java.util.Date;
 
 @Builder
 @AllArgsConstructor
@@ -17,7 +17,16 @@ public class NoticeResponseDto {
     private String content;
     private String writer;
     private String noticeType;
-    private LocalDateTime regDate; // regDate는 응답에 포함
+    private Date regDate;
+
+    public NoticeResponseDto(Notice notice) {
+        this.id = notice.getId();
+        this.title = notice.getTitle();
+        this.content = notice.getContent();
+        this.writer = notice.getWriter();
+        this.noticeType = notice.getNoticeType();
+        this.regDate = notice.getRegDate();
+    }
 
     public static NoticeResponseDto fromEntity(Notice notice) {
         return NoticeResponseDto.builder()
@@ -25,7 +34,7 @@ public class NoticeResponseDto {
                 .title(notice.getTitle())
                 .content(notice.getContent())
                 .writer(notice.getWriter())
-                .noticeType(notice.getNoticeType())
+                .noticeType(notice.getNoticeType())  // Convert boolean to string
                 .regDate(notice.getRegDate())
                 .build();
     }

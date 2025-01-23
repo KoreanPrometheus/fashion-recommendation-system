@@ -1,67 +1,99 @@
 package com.fastcampus.prometheus.domain.notice.controller;
 
+import com.fastcampus.prometheus.domain.notice.dto.PageHandler;
 import com.fastcampus.prometheus.domain.notice.dto.request.NoticeRequestDto;
 import com.fastcampus.prometheus.domain.notice.dto.response.NoticeResponseDto;
 import com.fastcampus.prometheus.domain.notice.service.NoticeService;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
+import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.stereotype.*;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.Optional;
 
-@RestController
-@RequestMapping("/api/notice")
+@Controller
+@RequestMapping("/notice")
+@RequiredArgsConstructor
 public class NoticeController {
 
     private final NoticeService noticeService;
 
-    // 생성자 주입
-    public NoticeController(NoticeService noticeService) {
-        this.noticeService = noticeService;
-    }
-
     // 모든 공지사항 조회
-    @GetMapping
-    public List<NoticeResponseDto> getAllNotices() {
-        return noticeService.getAllNotices();
+    @GetMapping("/list")
+    public String getAllNotices(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size,
+            Model model) {
+
+        Page<NoticeResponseDto> noticePage = noticeService.getPage(page, size);
+        PageHandler pageHandler = new PageHandler((int)noticePage.getTotalElements(), page, size);
+
+        model.addAttribute("ph", pageHandler);
+        model.addAttribute("noticePage", noticePage);
+        model.addAttribute("page", page);
+        model.addAttribute("totalPages", noticePage.getTotalPages());
+
+        return "noticeList";  // "noticeList.jsp"에 공지사항 목록을 전달
     }
 
     // 특정 공지사항 조회
-    @GetMapping("/{id}")
-    public ResponseEntity<NoticeResponseDto> getNoticeById(@PathVariable Long id) {
+    @GetMapping("/detail/{id}")
+    public String getNoticeById(@PathVariable("id") Long id, Model model) {
         Optional<NoticeResponseDto> noticeResponseDto = noticeService.getNoticeById(id);
-        return noticeResponseDto.map(ResponseEntity::ok)
-                .orElseGet(() -> ResponseEntity.status(HttpStatus.NOT_FOUND).build());
-    }
-
-    // 공지사항 생성
-    @PostMapping
-    public ResponseEntity<NoticeResponseDto> createNotice(@RequestBody NoticeRequestDto noticeRequestDto) {
-        NoticeResponseDto createdNotice = noticeService.createNotice(noticeRequestDto);
-        return ResponseEntity.status(HttpStatus.CREATED).body(createdNotice);
-    }
-
-    // 공지사항 수정
-    @PutMapping("/{id}")
-    public ResponseEntity<NoticeResponseDto> updateNotice(@PathVariable Long id, @RequestBody NoticeRequestDto noticeRequestDto) {
-        try {
-            NoticeResponseDto updatedNotice = noticeService.updateNotice(id, noticeRequestDto);
-            return ResponseEntity.ok(updatedNotice);
-        } catch (RuntimeException e) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        if (noticeResponseDto.isPresent()) {
+            model.addAttribute("notice", noticeResponseDto.get());
+            return "notice";  // 공지사항 상세 보기 페이지
+        } else {
+            return "redirect:/notice/list";  // 공지사항을 찾을 수 없는 경우 목록 페이지로 리다이렉트
         }
     }
 
+    // 공지사항 작성폼 페이지
+    @GetMapping("/write")
+    public String createNotice(Model model) {
+        return "noticeForm";  // 공지사항 작성 폼
+    }
+
+    // 공지사항 생성 처리
+    @PostMapping("/write")
+    public String createNotice(@ModelAttribute NoticeRequestDto noticeRequestDto) {
+        noticeService.createNotice(noticeRequestDto);
+        return "redirect:list";  // 공지사항 목록 페이지로 리다이렉트
+    }
+
+
+    // 공지사항 수정 처리
+    @PostMapping("/edit/{id}")
+    public String updateNotice(@PathVariable Long id, @ModelAttribute NoticeRequestDto noticeRequestDto) {
+        try {
+            noticeService.updateNotice(id, noticeRequestDto);
+            return "redirect:/notice/list";  // 공지사항 목록 페이지로 리다이렉트
+        } catch (RuntimeException e) {
+            return "redirect:/notice/list";  // 공지사항을 찾을 수 없는 경우 목록 페이지로 리다이렉트
+        }
+    }
+
+    @GetMapping("/delete")
+    public String delete(@RequestParam(required = false) List<Long> id, Model model) {
+        if(id != null && !id.isEmpty()){
+            List<NoticeResponseDto> notice = noticeService.readAllById(id);
+            model.addAttribute("notice", notice);
+        }
+        return "noticeDelete";
+    }
     // 공지사항 삭제
-    @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteNotice(@PathVariable Long id) {
-        try {
+    @PostMapping("/delete")
+    public String deleteNotice(@RequestParam List<Long> id) {
             noticeService.deleteNotice(id);
-            return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
-        } catch (RuntimeException e) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
-        }
+            return "redirect:/notice/list";
     }
 
+    @PostMapping("/{id}")
+    public String delete(@PathVariable Long id){
+
+        noticeService.delete(id);
+        return "redirect:/notice/list";
+    }
 }
