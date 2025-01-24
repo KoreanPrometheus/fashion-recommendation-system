@@ -31,7 +31,6 @@ public class MemberController {
         if (result.hasErrors()) {
             return "registerForm";
         }
-
         memberService.join(memberDto);
 
         return "redirect:/";

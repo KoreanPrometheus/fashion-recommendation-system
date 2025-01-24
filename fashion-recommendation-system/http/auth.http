@@ -1,0 +1,9 @@
+### 로그인
+
+POST http://localhost:8080/auth/login
+Content-Type: application/json
+
+{
+  "email": "tlsehdwns147@naver.com",
+  "password": "tlsehdwns147"
+}

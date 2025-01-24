@@ -16,7 +16,7 @@ public class MemberDto {
 
     private String name;
 
-    private String sex;
+    private String gender;
 
     private String password;
 
