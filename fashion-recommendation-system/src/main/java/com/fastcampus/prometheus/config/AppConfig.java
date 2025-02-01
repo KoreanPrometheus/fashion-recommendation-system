@@ -1,11 +1,16 @@
 package com.fastcampus.prometheus.config;
 
 
+import java.util.Base64;
+import lombok.Data;
+import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
-@Configuration
+//@Configuration -> @EnableConfigurationProperties(AppConfig.class) -> @ConfigurationProperties(prefix = "dj")
+@Data
+@ConfigurationProperties(prefix = "dj")
 public class AppConfig {
 
     @Bean
@@ -13,4 +18,13 @@ public class AppConfig {
         return new BCryptPasswordEncoder();
     }
 
+    private byte[] jwtKey;
+
+    public void setJwtKey(String jwtKey) {
+        this.jwtKey = Base64.getDecoder().decode(jwtKey);
+    }
+
+    public byte[] getJwtKey() {
+        return jwtKey;
+    }
 }

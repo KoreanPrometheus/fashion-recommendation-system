@@ -1,9 +1,9 @@
 ### 로그인
 
-POST http://localhost:8080/auth/login
+POST http://localhost:8080/auth/sign-in
 Content-Type: application/json
 
 {
-  "email": "tlsehdwns147@naver.com",
-  "password": "tlsehdwns147"
+  "email": "tlsehdwns117@naver.com",
+  "password": "1234"
 }

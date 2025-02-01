@@ -31,11 +31,15 @@ public class LoginController {
 
     private final LoginService loginService;
 
-    @GetMapping("/auth/login")
-    public String showLogin(Model model) {
-        model.addAttribute("loginDto", LoginRequestDto.builder().build());
-        return "loginForm";
-    }
+    /*
+    LoginController 사용 X -> AuthController 사용 O
+     */
+
+//    @GetMapping("/auth/login")
+//    public String showLogin(Model model) {
+//        model.addAttribute("loginDto", LoginRequestDto.builder().build());
+//        return "loginForm";
+//    }
 
 
 //    @PostMapping("/auth/login")
