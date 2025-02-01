@@ -29,6 +29,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestAttribute;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 @Controller
@@ -40,12 +41,11 @@ public class AuthController {
     private final AuthService authService;
     private final AppConfig appConfig;
 
-
-    @GetMapping("/foo")
-    public Long foo(MemberSession memberSession) {
-        log.info(">>>>{}", memberSession.id);
-        return memberSession.id;
-    }
+//    @GetMapping("/foo")
+//    public Long foo(MemberSession memberSession) {
+//        log.info(">>>>{}", memberSession.id);
+//        return memberSession.id;
+//    }
 
     @GetMapping("/sign-in")
     public String showLogin(Model model) {
@@ -54,27 +54,42 @@ public class AuthController {
     }
 
     @PostMapping("/sign-in")
-    public SessionResponse login(@RequestBody LoginRequestDto login) {
-        Long memberId = authService.signIn(login);
+    @ResponseBody
+    public ResponseEntity<?> login(@RequestBody LoginRequestDto login,
+        HttpServletResponse response) {
+        try {
+            Long memberId = authService.signIn(login);
 
-        // 토큰 생성할때 사용
+            // 토큰 생성할때 사용
 //        Key key = Keys.secretKeyFor(SignatureAlgorithm.HS256);
 //        byte[] encodedKey = key.getEncoded();
 //        String strKey = Base64.getEncoder().encodeToString(encodedKey); // String으로 변환
 
-        SecretKey key = Keys.hmacShaKeyFor(appConfig.getJwtKey());
+            SecretKey key = Keys.hmacShaKeyFor(appConfig.getJwtKey());
 
-        Date now = new Date();
-        Date expiryDate = new Date(now.getTime() + Duration.ofHours(1).toMillis()); // 1시간 후 만료
+            Date now = new Date();
+            Date expiryDate = new Date(now.getTime() + Duration.ofHours(1).toMillis()); // 1시간 후 만료
 
-        String jws = Jwts.builder()
-            .setSubject(String.valueOf(memberId))
-            .signWith(key)
-            .setIssuedAt(now) // 발급 시간
-            .setExpiration(expiryDate) // 만료일
-            .compact();
+            String jws = Jwts.builder()
+                .setSubject(String.valueOf(memberId))
+                .signWith(key)
+                .setIssuedAt(now) // 발급 시간
+                .setExpiration(expiryDate) // 만료일
+                .compact();
 
-        return new SessionResponse(jws);
+            // HttpOnly 쿠키에 저장.
+            ResponseCookie cookie = ResponseCookie.from("jwt", jws)
+                .httpOnly(true)
+                .secure(true)
+                .path("/")
+                .maxAge(Duration.ofHours(1))
+                .build();
+            response.addHeader(HttpHeaders.SET_COOKIE, cookie.toString());
+
+            return ResponseEntity.ok(new SessionResponse(jws));
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.status(400).body("아이디 또는 비밀번호가 일치하지 않습니다.");
+        }
 
     }
 }

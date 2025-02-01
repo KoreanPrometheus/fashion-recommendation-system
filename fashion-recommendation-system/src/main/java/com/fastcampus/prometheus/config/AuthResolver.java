@@ -43,7 +43,6 @@ public class AuthResolver implements HandlerMethodArgumentResolver {
             throw new Unauthorized();
         }
 
-
         try {
             Jws<Claims> claims = Jwts.parserBuilder()
                 .setSigningKey(appConfig.getJwtKey())
@@ -55,7 +54,5 @@ public class AuthResolver implements HandlerMethodArgumentResolver {
         } catch (JwtException e) {
             throw new Unauthorized();
         }
-
-//        return new MemberSession(session.getMember().getId());
     }
 }

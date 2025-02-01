@@ -11,6 +11,9 @@ import org.springframework.web.servlet.ModelAndView;
 @Slf4j
 public class AuthInterceptor implements HandlerInterceptor {
 
+    /*
+    AuthResolver사용 Interceptor 사용 X
+     */
 
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response,
