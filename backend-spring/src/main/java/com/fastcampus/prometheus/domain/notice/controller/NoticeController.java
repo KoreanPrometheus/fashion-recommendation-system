@@ -6,7 +6,7 @@ import com.fastcampus.prometheus.domain.notice.dto.response.NoticeResponseDto;
 import com.fastcampus.prometheus.domain.notice.service.NoticeService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
-import org.springframework.stereotype.*;
+import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
@@ -63,31 +63,33 @@ public class NoticeController {
         return "redirect:/notice";  // 공지사항 목록 페이지로 리다이렉트
     }
 
-
     // 공지사항 수정 처리
-    @PutMapping("/{id}")
+    @PatchMapping("/{id}")
     public String updateNotice(@PathVariable Long id, @ModelAttribute NoticeRequestDto noticeRequestDto) {
+        System.out.println("Patch");
         try {
             noticeService.updateNotice(id, noticeRequestDto);
-            return "redirect:/notice";  // 공지사항 목록 페이지로 리다이렉트
+            return "redirect:/notice/"+id;  // 공지사항 목록 페이지로 리다이렉트
         } catch (RuntimeException e) {
-            return "redirect:/notice";  // 공지사항을 찾을 수 없는 경우 목록 페이지로 리다이렉트
+            System.out.println(e);
+            return "redirect:/notice/"+id;  // 공지사항을 찾을 수 없는 경우 목록 페이지로 리다이렉트
         }
     }
 
-    @GetMapping("/delete")
-    public String delete(@RequestParam(required = false) List<Long> id, Model model) {
-        if(id != null && !id.isEmpty()){
-            List<NoticeResponseDto> notice = noticeService.readAllById(id);
-            model.addAttribute("notice", notice);
-        }
-        return "notice/noticeDelete";
-    }
+//    @GetMapping("/delete")
+//    public String delete(@RequestParam(required = false) List<Long> id, Model model) {
+//        if(id != null && !id.isEmpty()){
+//            List<NoticeResponseDto> notice = noticeService.readAllById(id);
+//            model.addAttribute("notice", notice);
+//        }
+//        return "notice/noticeDelete";
+//    }
     // 공지사항 삭제
-    @DeleteMapping("/delete")
-    public String deleteNotice(@RequestParam List<Long> id) {
-            noticeService.deleteNotice(id);
-            return "redirect:/notice";
+    @DeleteMapping("/{id}")
+    public String deleteNotice(@PathVariable Long id) {
+        System.out.println("Delete");
+        noticeService.delete(id);
+        return "redirect:/notice";
     }
 
 //    @PostMapping("/{id}")

@@ -3,7 +3,10 @@ package com.fastcampus.prometheus.domain.notice.entity;
 import com.fastcampus.prometheus.domain.notice.dto.request.NoticeRequestDto;
 import com.fastcampus.prometheus.domain.notice.dto.response.NoticeResponseDto;
 import jakarta.persistence.*;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.hibernate.annotations.CreationTimestamp;
 
 import java.time.LocalDateTime;
@@ -29,7 +32,7 @@ public class Notice {
     private String content;
 
     //@ManyToOne
-    @Column
+    @Column(nullable = false)
     private Long writer;
 
     @Column(name = "notice_type")

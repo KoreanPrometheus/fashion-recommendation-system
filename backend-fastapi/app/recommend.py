@@ -23,7 +23,7 @@ app.add_middleware(
 )
 
 import json, os
-file_path = "../resources/spao_woman2.json"
+file_path = 'backend-fastapi/resources/spao_woman2.json'
 
 if os.path.exists(file_path):
     with open(file_path, "r", encoding="utf-8") as file:
@@ -113,7 +113,7 @@ class QueryParams(BaseModel):
 @app.post("/chat")
 async def chat(data: QueryParams):
     print(f"data : {data}")
-    gender = "여성" if data.gender=="female" else "남성"
+    gender = "여성" if data.gender=="FEMALE" else "남성"
     
     chain_top = prompt_template_top | llm | StrOutputParser()
     chain_bottom = prompt_template_bottom | llm | StrOutputParser()

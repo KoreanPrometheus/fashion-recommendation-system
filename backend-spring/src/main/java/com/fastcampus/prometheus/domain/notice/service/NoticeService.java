@@ -85,8 +85,6 @@ public class NoticeService {
             Notice existing = existingNotice.get();
             existing.setTitle(noticeRequestDto.getTitle());  // DTO의 제목으로 수정
             existing.setContent(noticeRequestDto.getContent());  // DTO의 내용으로 수정
-            existing.setWriter(noticeRequestDto.getWriter());
-            existing.setNoticeType(noticeRequestDto.getNoticeType());
             Notice updatedNotice = noticeRepository.save(existing);  // 수정된 공지사항 저장
             NoticeResponseDto.builder()
                     .id(updatedNotice.getId())
@@ -111,7 +109,7 @@ public class NoticeService {
             noticeRepository.deleteAll(notices);
         }
     }
-    
+
     public void delete(Long id){
         Notice notice = noticeRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("해당 문의글이 존재하지 않습니다."));

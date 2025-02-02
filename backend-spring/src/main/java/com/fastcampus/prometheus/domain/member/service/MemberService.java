@@ -7,7 +7,6 @@ import com.fastcampus.prometheus.domain.member.repository.MemberRepository;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.crypto.scrypt.SCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -25,12 +24,17 @@ public class MemberService {
         Member member = Member.builder()
             .email(memberDto.getEmail())
             .name(memberDto.getName())
+            .memberGender(memberDto.getMemberGender())
             .password(encryptedPassword)
-            .memberType(memberDto.getMemberType())
+            .memberRole(memberDto.getMemberRole())
             .build();
 
         memberRepository.save(member);
 
         return member;
+    }
+
+    public Optional<Member> getId(String email) {
+        return memberRepository.findByEmail(email);
     }
 }

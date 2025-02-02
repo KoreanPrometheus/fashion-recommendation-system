@@ -1,5 +1,5 @@
 package com.fastcampus.prometheus.domain.member;
 
-public enum MemberType {
+public enum MemberRole {
     ADMIN, USER
 }

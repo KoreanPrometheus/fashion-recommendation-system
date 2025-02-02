@@ -1,9 +1,10 @@
 package com.fastcampus.prometheus.domain.notice.dto.request;
 
-import com.fastcampus.prometheus.domain.member.entity.MemberType;
 import com.fastcampus.prometheus.domain.notice.entity.Notice;
 import jakarta.validation.constraints.NotBlank;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
 
 @Builder
 @AllArgsConstructor

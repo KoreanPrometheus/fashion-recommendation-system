@@ -1,10 +1,7 @@
 package com.fastcampus.prometheus.domain.notice.dto;
 
-
-import com.fastcampus.prometheus.domain.notice.dto.response.NoticeResponseDto;
 import lombok.Getter;
 import lombok.Setter;
-import org.springframework.data.domain.Page;
 
 @Setter
 @Getter

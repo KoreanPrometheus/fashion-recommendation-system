@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -7,56 +7,106 @@
   <!-- Bootstrap CSS (optional) -->
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
 </head>
+<style>
+    .logo-image {
+        width: 130px;
+    }
+
+    .btn {
+        padding: 0.5rem 1rem;
+        border: none;
+        border-radius: 0.5rem;
+        font-size: 1rem;
+        font-weight: normal;
+        cursor: pointer;
+    }
+
+    .btn-black {
+        background-color: #ff4a48;
+        color: white;
+        padding: 0.5rem 1rem;
+    }
+
+    .btn-black:hover {
+        background-color: #ff4a48;
+        color: white;
+        padding: 0.5rem 1rem;
+        border: 0;
+    }
+
+    .btn-black:active {
+        background-color: #ff4a48 !important;
+        color: white !important;
+        padding: 0.5rem 1rem !important;
+        border: 0 !important;
+    }
+
+</style>
 <body>
-<div class="container mt-5">
+<header>
+    <div class="logo text-center mt-5">
+        <a href="/"><img class="logo-image" src="/img/kp.png"></a>
+    </div>
+</header>
+<div class="container mt-4">
   <div class="row justify-content-center">
-    <div class="col-md-6">
-      <h2 class="text-center mb-4">Register</h2>
-      <form action="/members/register" method="post">
+    <div class="col-md-4">
+
+        <div th:if="${errorMessage}" class="alert alert-danger text-center" role="alert">
+            <div th:each="err : ${errorMessage}">
+                <span th:text="${err}"></span><br>
+            </div>
+        </div>
+
+      <h6 class="fw-bold">회원정보를 입력해주세요</h6>
+      <form action="/register" method="post">
         <!-- Email Field -->
         <div class="mb-3">
-          <label for="email" class="form-label">Email</label>
-          <input type="email" class="form-control" id="email" name="email" placeholder="이메일을 입력하세요" required>
+<!--          <label for="email" class="form-label">이메일</label>-->
+          <input type="email" class="form-control" id="email" name="email" placeholder="아이디(이메일)" required>
         </div>
         <!-- Name Field -->
         <div class="mb-3">
-          <label for="name" class="form-label">Name</label>
-          <input type="text" class="form-control" id="name" name="name" placeholder="이름을 입력하세요" required>
+<!--          <label for="name" class="form-label">이름</label>-->
+          <input type="text" class="form-control" id="name" name="name" placeholder="이름" required>
         </div>
-        <!-- Sex Field -->
+        <!-- Gender Field -->
         <div class="mb-3">
-          <label for="gender" class="form-label">gender</label>
-          <select class="form-select" id="gender" name="gender" required>
-            <option value="">Select your gender</option>
-            <option value="male">Male</option>
-            <option value="female">Female</option>
-            <option value="other">Other</option>
-          </select>
+          <div class="form-control d-flex justify-content-evenly">
+            <div>
+              <input class="form-check-input" role="button" type="radio" id="male" name="memberGender" value="MALE" checked />
+              <label for="male" role="button">남자</label>
+            </div>
+            <div>
+              <input class="form-check-input" role="button" type="radio" id="female" name="memberGender" value="FEMALE" />
+              <label for="female" role="button">여자</label>
+            </div>
+          </div>
         </div>
         <!-- Password Field -->
         <div class="mb-3">
-          <label for="password" class="form-label">Password</label>
-          <input type="password" class="form-control" id="password" name="password" placeholder="비밀번호를 입력하세요" required>
+<!--          <label for="password" class="form-label">패스워드</label>-->
+          <input type="password" class="form-control" id="password" name="password" placeholder="비밀번호" required>
 
         </div>
         <!-- Password Confirm Field -->
         <div class="mb-3">
-          <label for="passwordConfirm" class="form-label">Confirm Password</label>
-          <input type="password" class="form-control" id="passwordConfirm" name="passwordConfirm" placeholder="비밀번호를 다시 입력하세요" required>
+<!--          <label for="passwordConfirm" class="form-label">패스워드 확인</label>-->
+          <input type="password" class="form-control" id="passwordConfirm" name="passwordConfirm" placeholder="비밀번호 확인" required>
 
         </div>
         <!-- Member Type Field -->
-        <div class="mb-3">
-          <label for="memberType" class="form-label">Member Type</label>
-          <select class="form-select" id="memberType" name="memberType" required>
-            <option value="">Select your member type</option>
-            <option value="ADMIN">Admin</option>
-            <option value="USER">User</option>
-          </select>
-        </div>
+<!--        <div class="mb-3">-->
+<!--          <label for="memberType" class="form-label">멤버 타입</label>-->
+<!--          <select class="form-select" id="memberType" name="memberType" required>-->
+<!--            <option value="ADMIN">Admin</option>-->
+<!--            <option value="USER">User</option>-->
+<!--          </select>-->
+<!--        </div>-->
+        <input type="hidden" id="memberRole" name="memberRole" value="USER">
         <!-- Submit Button -->
         <div class="d-grid">
-          <button type="submit" class="btn btn-primary">회원 가입</button>
+          <button type="submit" class="btn btn-black">가입하기</button>
         </div>
       </form>
     </div>

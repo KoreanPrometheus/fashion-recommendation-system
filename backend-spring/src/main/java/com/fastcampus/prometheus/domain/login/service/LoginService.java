@@ -20,7 +20,6 @@ public class LoginService {
         return memberRepository.findByEmail(loginEmail)
             .filter(member -> passwordEncoder.matches(password, member.getPassword()))
             .orElseThrow(() -> new IllegalArgumentException("이메일 또는 비밀번호가 일치하지 않습니다."));
-
     }
 
 

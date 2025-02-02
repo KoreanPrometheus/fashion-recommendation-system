@@ -1,0 +1,13 @@
+### 회원가입
+
+POST http://localhost:8080/members/register
+Content-Type: application/json
+
+{
+  "email": "tlsehdwns147@naver.com",
+  "password": "1234",
+  "gender" : "M",
+  "name" : "신동준",
+  "passwordConfirm" : "1234",
+  "memberType" : "USER"
+}
