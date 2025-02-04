@@ -1,10 +1,20 @@
 import chromadb
 import json
 import os
+import shutil
 from sentence_transformers import SentenceTransformer
 
 # all-MiniLM-L6-v2 모델 로드
 embedding_model = SentenceTransformer("sentence-transformers/all-MiniLM-L6-v2")
+
+# chroma_db 디렉토리 경로
+chroma_db_dir = './backend-fastapi/chroma_db'
+# chroma_db 디렉토리 내부의 모든 파일 및 서브 디렉토리 삭제
+if os.path.exists(chroma_db_dir):
+    shutil.rmtree(chroma_db_dir)
+    print(f"{chroma_db_dir} 디렉토리와 그 안의 모든 내용이 삭제되었습니다.")
+else:
+    print(f"{chroma_db_dir} 디렉토리가 존재하지 않습니다.")
 
 # ChromaDB 클라이언트 생성 (로컬 저장)
 chroma_client = chromadb.PersistentClient(path="./backend-fastapi/chroma_db")
@@ -35,11 +45,12 @@ else:
     json_data = []
 
 # 기존 데이터를 삭제 후 다시 저장
-collection.delete(ids=[str(item["id"]) for item in json_data])
+# collection.delete(ids=[str(item["id"]) for item in json_data])
 
 # 데이터를 ChromaDB에 추가
 for item in json_data:
-    text_to_embed = f"{item['title']} {item['occasion']} {item['style']}"
+#     text_to_embed = f"{item['title']} {item['type']} {item['occasion']} {item['style']} {item['material']}"
+    text_to_embed = f" {item['type']} {item['occasion']}"
     embedding = get_embedding(text_to_embed)
 
     collection.add(
