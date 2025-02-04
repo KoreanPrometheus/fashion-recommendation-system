@@ -38,10 +38,10 @@
 `pip install -U transformers tokenizers `
 `pip install -U langchain-upstage`
 
-### 저장
+### ChromaDB 저장
 > python .\backend-fastapi\app\chromadb_storage.py 
 
-### 서버 실행
+### FastAPI 서버 실행
 > fastapi dev --no-reload .\backend-fastapi\app\recommend_chromadb.py
 - 취소 : Ctrl + C
 
