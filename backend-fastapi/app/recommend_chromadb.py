@@ -61,7 +61,7 @@ async def chat(data: QueryParams):
         def get_best_match(query_embedding, clothing_type):
             results = collection.query(
                 query_embeddings=[query_embedding],
-                n_results=5  # 여러 개 가져와서 필터링
+                n_results=10  # 여러 개 가져와서 필터링
             )
 
             # 검색된 아이템 중에서 `type`이 맞는 첫 번째 항목 선택
